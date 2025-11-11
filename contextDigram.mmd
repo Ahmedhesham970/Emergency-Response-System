@@ -1,0 +1,33 @@
+graph LR
+    %% External Entities
+    User[👤 User]
+    Admin[👨‍💼 Admin]
+    Paramedic[🚑 Paramedic]
+    
+    %% Central System
+    System[🏥 Ambulance<br/>Management<br/>System]
+    
+    %% User Relations
+    User -->|Submit Emergency Report| System
+    User -->|Provide Location| System
+    System -->|Send Confirmation| User
+    
+    %% Admin Relations
+    Admin -->|Login/Authenticate| System
+    Admin -->|View Reports| System
+    Admin -->|Assign Ambulance| System
+    System -->|Display Dashboard| Admin
+    System -->|Send Notifications| Admin
+    
+    %% Paramedic Relations
+    Paramedic -->|Update Location| System
+    Paramedic -->|Accept/Reject Request| System
+    System -->|Send Emergency Alert| Paramedic
+    System -->|Provide Route Info| Paramedic
+    
+    %% Styling
+    classDef userStyle fill:#4A90E2,stroke:#2E5C8A,stroke-width:3px,color:#fff,font-size:14px
+    classDef systemStyle fill:#E74C3C,stroke:#C0392B,stroke-width:4px,color:#fff,font-size:16px,font-weight:bold
+    
+    class User,Admin,Paramedic userStyle
+    class System systemStyle

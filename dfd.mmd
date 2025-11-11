@@ -1,0 +1,66 @@
+graph TB
+    User[👤 User]
+    Admin[👨💼 Admin]
+    Paramedic[🚑 Paramedic]
+    
+    %% Processes
+    UserApp[📱 User Mobile/Web App]
+    Dashboard[💻 Ambulance Dashboard]
+    Backend[⚙️ Backend Server]
+    AuthService[🔐 Authentication Service]
+    %% LocationService[📍 Map/Location Service]
+    
+    %% Data Stores - حسب ما ذكرت
+    UsersDB[(👥 Users DB)]
+    AdminsDB[(👨💼 Admins DB)]
+    ReportsDB[(📋 Emergency Reports DB)]
+    HospitalsAmbulancesDB[(🏥 Hospitals & Ambulances DB)]
+    
+    %% Authentication Flow
+    User -->|Register/Login| UserApp
+    UserApp -->|Send Credentials & ID Card| AuthService
+    AuthService -->|Verify & Store User| UsersDB
+    AuthService -->|Verify Admin| AdminsDB
+    
+    %% ID Verification Process
+    UserApp -->|Upload ID Card| Backend
+    %% Backend -->|Fraud Detection Model| Backend
+    Backend -->|Store Verification Result| UsersDB
+    
+    %% Emergency Report Flow
+    User -->|Submit Emergency Report| UserApp
+    UserApp -->|Send: Photo, Address, Injuries Count| Backend
+    Backend -->|Save Report Data| ReportsDB
+    
+    %% Dashboard & Processing Flow
+    Backend -->|Push Real-time Reports| Dashboard
+    Dashboard -->|Display Reports List & Map| Admin
+    Dashboard -->|Show Reports| Paramedic
+    
+    %% Location & Facility Analysis
+    Backend -->|Get Hospital & Ambulance Data| HospitalsAmbulancesDB
+    %% Backend -->|Calculate Nearest Facility| LocationService
+    %% LocationService -->|Find: Ambulance → Hospital with Beds ≥ Injuries| Backend
+    
+    %% Assignment & Tracking
+    Admin -->|Assign Ambulance| Dashboard
+    Dashboard -->|Update Assignment Status| Backend
+    Backend -->|Update Report & Ambulance Status| ReportsDB
+    Backend -->|Update Ambulance Availability| HospitalsAmbulancesDB
+    
+    %% Real-time Tracking
+    Paramedic -->|Update Location & Status| Dashboard
+    %% Dashboard -->|Track Ambulance Position| LocationService
+    %% UserApp -->|Track Ambulance Location| Backend
+    %% Backend -->|Provide Tracking Data| LocationService
+    
+    %% Styling
+    classDef userStyle fill:#4A90E2,stroke:#2E5C8A,stroke-width:3px,color:#fff
+    classDef processStyle fill:#50C878,stroke:#2D7A4F,stroke-width:2px,color:#fff
+    classDef dbStyle fill:#F39C12,stroke:#C87F0A,stroke-width:2px,color:#fff
+    classDef serviceStyle fill:#9B59B6,stroke:#6C3483,stroke-width:2px,color:#fff
+    
+    class User,Admin,Paramedic userStyle
+    class UserApp,Dashboard,Backend processStyle
+    class UsersDB,AdminsDB,ReportsDB,HospitalsAmbulancesDB dbStyle
+    class AuthService,LocationService serviceStyle
