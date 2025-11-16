@@ -3,6 +3,10 @@ const bcrypt = require("bcrypt");
 const runPythonCheck = require("../services/python.service.js");
 const User = require("../models/userModel.js");
 
+// 🎯 قراءة الحد الأدنى من .env أو استخدام 0.6 كقيمة افتراضية
+const SIMILARITY_THRESHOLD =
+  parseFloat(process.env.AI_SIMILARITY_THRESHOLD) || 0.6;
+
 const safeDeleteFile = (filePath) => {
   if (filePath && fs.existsSync(filePath)) {
     try {
@@ -19,7 +23,6 @@ exports.register = async (req, res) => {
   let filePath = file?.path;
 
   try {
-    // ✅ استخدام fullName من الـ request
     const { fullName, email, phone, password } = req.body;
 
     // 1) التحقق من المدخلات الأساسية
@@ -99,10 +102,10 @@ exports.register = async (req, res) => {
 
     console.log(`📸 Processing ID image: ${filePath}`);
 
-    // 9) تشغيل نموذج الذكاء الاصطناعي للتحقق من البطاقة
+    // 9) تشغيل نموذج الذكاء الاصطناعي مع threshold مخصص
     let pythonResult;
     try {
-      pythonResult = await runPythonCheck(filePath);
+      pythonResult = await runPythonCheck(filePath, SIMILARITY_THRESHOLD);
       console.log("🤖 AI Result:", pythonResult);
     } catch (pyErr) {
       console.error("❌ Python/AI Error:", pyErr.message || pyErr);
@@ -131,38 +134,38 @@ exports.register = async (req, res) => {
     }
 
     if (!pythonResult.valid) {
+      const similarityPercent = (pythonResult.similarity * 100).toFixed(2);
+      const thresholdPercent = (SIMILARITY_THRESHOLD * 100).toFixed(0);
+
       return res.status(400).json({
-        message: "البطاقة غير صالحة أو غير واضحة. يرجى رفع صورة واضحة للبطاقة",
-        similarity: pythonResult.similarity
-          ? (pythonResult.similarity * 100).toFixed(2) + "%"
-          : "0%",
-        details: "نسبة التطابق أقل من الحد المطلوب (80%)",
+        message: `البطاقة غير صالحة أو غير واضحة. نسبة التطابق: ${similarityPercent}%`,
+        similarity: similarityPercent + "%",
+        required: thresholdPercent + "%",
+        details: `نسبة التطابق أقل من الحد المطلوب (${thresholdPercent}%). يرجى رفع صورة أوضح للبطاقة.`,
       });
     }
 
     // 12) تشفير كلمة المرور
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // 13) ✅ حفظ المستخدم - استخدام name بدلاً من fullName
+    // 13) حفظ المستخدم في قاعدة البيانات
     const newUser = await User.create({
-      name: fullName, // ✅ تحويل fullName إلى name
+      fullName,
       email,
       phone,
       password: hashedPassword,
-      // إذا كان Model يحتوي على حقل idSimilarity
-      // idSimilarity: pythonResult.similarity || 0,
+      idSimilarity: pythonResult.similarity || 0,
     });
 
-    console.log(`✅ User registered: ${newUser.email}`);
+    console.log("✅ User created successfully:", newUser.id);
 
-    // 14) إرجاع النتيجة
+    // ✅ إرجاع Response ناجح
     return res.status(201).json({
       success: true,
-      message: "تم التحقق من البطاقة وإنشاء الحساب بنجاح",
-      similarity: (pythonResult.similarity * 100).toFixed(2) + "%",
-      userId: newUser.id,
+      message: "تم إنشاء الحساب بنجاح! 🎉",
       user: {
-        name: newUser.name,
+        id: newUser.id,
+        fullName: newUser.fullName,
         email: newUser.email,
         phone: newUser.phone,
       },

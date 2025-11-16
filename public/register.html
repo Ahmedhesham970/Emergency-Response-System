@@ -9,9 +9,23 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="./register.css" />
+    <!-- ✅ إضافة SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   </head>
 
   <body>
+    <nav style="padding: 15px; background: #222; color: white; display: flex; gap: 20px;">
+      <a href="#" style="color: gray; pointer-events:none;">Home (Disabled)</a>
+      <a href="#" style="color: gray; pointer-events:none;">Profile (Disabled)</a>
+      <a href="#" style="color: white;" id="mainLink">Main Page</a>
+    </nav>
+
+    <script>
+      document.getElementById("mainLink").addEventListener("click", () => {
+        window.location.href = "/public/user.html";
+      });
+    </script>
+
     <div class="register-container">
       <div class="register-card">
         <div class="header-section">
@@ -20,40 +34,56 @@
           <p class="subtitle">انضم إلينا</p>
         </div>
 
-        <div id="errorMessage" class="error-message"></div>
-        <div id="successMessage" class="success-message"></div>
+        <div
+          id="errorMessage"
+          class="error-message"
+          style="display: none"
+        ></div>
+        <div
+          id="successMessage"
+          class="success-message"
+          style="display: none"
+        ></div>
 
-        <form class="form" id="registerForm" enctype="multipart/form-data">
+        <!-- ✅ منع السلوك الافتراضي تماماً -->
+        <form
+          class="form"
+          id="registerForm"
+          enctype="multipart/form-data"
+          onsubmit="return false;"
+        >
           <div class="form-group">
-            <label for="full-name"
-              ><span class="icon-label">👤</span> الاسم الكامل:</label
-            >
+            <label for="full-name">
+              <span class="icon-label">👤</span> الاسم الكامل:
+            </label>
             <input
               type="text"
               id="full-name"
               name="fullName"
               required
               placeholder="أدخل اسمك الكامل"
+              autocomplete="name"
             />
           </div>
 
           <div class="form-group">
-            <label for="email"
-              ><span class="icon-label">📧</span> البريد الإلكتروني:</label
-            >
+            <label for="email">
+              <span class="icon-label">📧</span> البريد الإلكتروني:
+            </label>
             <input
               type="email"
               id="email"
               name="email"
               required
               placeholder="example@domain.com"
+              autocomplete="email"
             />
           </div>
 
           <div class="form-group">
-            <label for="phone"
-              ><span class="icon-label">📱</span> رقم الهاتف:</label
-            >
+            <label for="phone">
+              <span class="icon-label">📱</span> رقم الهاتف:
+            </label>
             <input
               type="tel"
               id="phone"
@@ -61,13 +91,15 @@
               required
               placeholder="01XXXXXXXXX"
               pattern="[0-9]{11}"
+              maxlength="11"
+              autocomplete="tel"
             />
           </div>
 
           <div class="form-group">
-            <label for="password"
-              ><span class="icon-label">🔒</span> كلمة المرور:</label
-            >
+            <label for="password">
+              <span class="icon-label">🔒</span> كلمة المرور:
+            </label>
             <input
               type="password"
               id="password"
@@ -75,6 +107,7 @@
               required
               placeholder="أدخل كلمة مرور قوية"
               minlength="8"
+              autocomplete="new-password"
             />
             <div class="password-requirements">
               يجب أن تحتوي على 8 أحرف على الأقل
@@ -82,22 +115,29 @@
           </div>
 
           <div class="form-group">
-            <label for="confirm-password"
-              ><span class="icon-label">✓</span> تأكيد كلمة المرور:</label
-            >
+            <label for="confirm-password">
+              <span class="icon-label">✓</span> تأكيد كلمة المرور:
+            </label>
             <input
               type="password"
               id="confirm-password"
               name="confirmPassword"
               required
               placeholder="أعد إدخال كلمة المرور"
+              minlength="8"
+              autocomplete="new-password"
             />
           </div>
 
-          <!-- حقل رفع صورة البطاقة -->
           <div class="form-group">
-            <label for="national_id_image">📸 صورة بطاقة الرقم القومي:</label>
-            <input type="file" id="national_id_image" required />
+            <label for="national_id_image"> 📸 صورة بطاقة الرقم القومي: </label>
+            <input
+              type="file"
+              id="national_id_image"
+              name="national_id_image"
+              accept="image/jpeg,image/jpg,image/png"
+              required
+            />
           </div>
 
           <button type="submit" class="register-btn">✨ إنشاء الحساب</button>
