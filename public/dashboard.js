@@ -10,6 +10,31 @@ let allAmbulanceFeatures = [];
 let bedsChartInstance = null;
 let severityChartInstance = null;
 
+// ===== DYNAMIC COUNTER ANIMATION =====
+function animateCounter(elementId, start, end, duration = 1000) {
+  const obj = document.getElementById(elementId);
+  if (!obj) return;
+
+  // Add 'updating' class for visual pop
+  obj.classList.add("updating");
+  
+  let startTimestamp = null;
+  const step = (timestamp) => {
+    if (!startTimestamp) startTimestamp = timestamp;
+    const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+    
+    // Calculate current number
+    const current = Math.floor(progress * (end - start) + start);
+    obj.innerHTML = current.toLocaleString("ar-EG");
+
+    if (progress < 1) {
+      window.requestAnimationFrame(step);
+    } else {
+      obj.classList.remove("updating");
+    }
+  };
+  window.requestAnimationFrame(step);
+}
 // ===== Notification Sound =====
 function playNotification() {
   try {
@@ -56,6 +81,8 @@ try {
     }));
     renderAccidents();
   });
+  // Inside your socket.on("newAccident") block:
+
   socket.on("newAccident", (accident) => {
     if (!accident.id)
       accident.id = Date.now() + Math.random().toString(36).substr(2, 5);
@@ -68,16 +95,15 @@ try {
     );
 
     if (!exists) {
-      accidents.unshift(accident);
-      renderAccidents();
-      playNotification();
+      accidents.unshift(accident); // Add to top of list
 
-      // ✅ Update Counter
-      const totalEl = document.getElementById("totalReports");
-      if (totalEl) {
-        const currentCount = parseInt(totalEl.textContent) || 0;
-        totalEl.textContent = (currentCount + 1).toLocaleString("ar-EG");
-      }
+      playNotification(); // Play sound
+
+      // The render function now handles the counter animation automatically
+      renderAccidents();
+
+      // Optional: Trigger a toast notification via SweetAlert
+      
     }
   });
 } catch (error) {
@@ -115,56 +141,98 @@ function deleteAccident(index) {
 window.deleteAccident = deleteAccident;
 
 // ===== RENDER ACCIDENTS LIST =====
+// ===== ENHANCED RENDER ACCIDENTS =====
+// ===== ENHANCED RENDER ACCIDENTS =====
 function renderAccidents() {
   const container = document.getElementById("accidentsList");
   const totalEl = document.getElementById("totalReports");
 
+  // 1. Handle Counter Animation
   if (totalEl) {
-    totalEl.textContent = accidents.length.toLocaleString("ar-EG");
+    // Get current number (strip non-digits)
+    const currentVal = parseInt(totalEl.innerText.replace(/[^0-9]/g, "")) || 0;
+    const newVal = accidents.length;
+    
+    // Only animate if the number changed
+    if (currentVal !== newVal) {
+      animateCounter("totalReports", currentVal, newVal);
+    }
   }
 
-  // Update Severity Chart whenever list changes
-  updateSeverityChart();
+  // 2. Update Charts
+  if(window.updateSeverityChart) window.updateSeverityChart();
 
+  // 3. Handle Empty State
   if (!accidents || accidents.length === 0) {
     container.innerHTML = `
-      <div class="no-accidents">
-        <div class="no-accidents-icon">📭</div>
-        <p>لا توجد بلاغات جديدة</p>
+      <div style="text-align:center; padding: 40px; color: var(--muted);">
+        <div style="font-size: 40px; margin-bottom:10px; opacity:0.5; animation: pulse 2s infinite;">📡</div>
+        <p>جاري انتظار إشارات البلاغات...</p>
       </div>`;
     return;
   }
+
+  // 4. Generate Enhanced HTML
   container.innerHTML = accidents
     .map((accident, index) => {
-      const reportTime = new Date(
-        accident.reportTime || accident.timestamp
-      ).toLocaleDateString("ar-EG");
-      const coordsLat = accident.geom.coordinates[1].toFixed(4);
-      const coordsLon = accident.geom.coordinates[0].toFixed(4);
-      const reportId = accident.id || index + 1;
+      const reportTime = new Date(accident.reportTime || accident.timestamp).toLocaleTimeString("ar-EG", { hour: '2-digit', minute:'2-digit' });
+      const reportId = accident.id ? String(accident.id).substring(0, 6).toUpperCase() : `R-${index}`;
+      const injuries = accident.numberOfAccidents || 0;
+
+      // --- FIX: Define Severity Variables Logic ---
+      const status = (accident.status || "")
+
+      let severityClass, badgeClass, severityText;
+ switch (status) {
+   case "Normal":
+     severityClass = "severity-low";
+     badgeClass = "badge-low";
+     severityText = "حالة مستقرة";
+     break;
+   case "Moderate":
+     severityClass = "severity-medium";
+     badgeClass = "badge-medium";
+     severityText = "حالة متوسطة";
+     break;
+   case "Critical":
+     severityClass = "severity-high";
+     badgeClass = "badge-high";
+     severityText = "حالة حرجة 🚨";
+     break;
+   default:
+     severityClass = "severity-low";
+     badgeClass = "badge-low";
+     severityText = "حالة مستقرة";
+ }
+
+      // --------------------------------------------
 
       return `
-        <div class="accident-card">
+        <div class="accident-item ${severityClass}">
           <div class="accident-header">
-            <span class="accident-id">بلاغ #${reportId}</span>
-            <span class="accident-time">${reportTime}</span>
+            <span class="accident-id">#${reportId}</span>
+            <span class="accident-time">🕒 ${reportTime}</span>
           </div>
-          <div class="accident-info">
-            <div class="info-row">
-              <span class="info-label">عدد المصابين:</span>
-              <span class="injuries-badge">${accident.numberOfAccidents}</span>
+          
+          <div class="accident-body">
+            <div class="location-text">
+              <span>عدد المصابين: <strong>${injuries}</strong></span>
             </div>
-            <div class="info-row">
-              <span class="info-label">📍 الموقع:</span>
-              <span class="info-value" style="direction: ltr;">${coordsLat}, ${coordsLon}</span>
+            <div class="severity-badge ${badgeClass}">
+              ${severityText}
             </div>
           </div>
+
           <div class="accident-actions">
-            <button class="view-btn" id="viewBtn${index}" onclick="showAccidentOnMap(${index})">
-              🗺️ عرض على الخريطة
+            <button class="action-btn btn-view" id="viewBtn${index}" onclick="handleRouteClick(${index})">
+              <span class="btn-icon">🗺️</span>
+              <div class="btn-spinner"></div>
+              <span class="btn-text">تتبع المسار</span>
             </button>
-            <button class="delete-btn" onclick="deleteAccident(${index})">
-              🗑️ حذف البلاغ
+            
+            <button class="action-btn btn-delete" onclick="deleteAccident(${index})">
+              <span>🗑️</span>
+              <span>حذف</span>
             </button>
           </div>
         </div>
@@ -172,6 +240,37 @@ function renderAccidents() {
     })
     .join("");
 }
+window.renderAccidents = renderAccidents;
+
+// ===== WRAPPER FOR BUTTON CLICK (LOADING EFFECT) =====
+window.handleRouteClick = function(index) {
+  const btn = document.getElementById(`viewBtn${index}`);
+  const btnText = btn.querySelector(".btn-text");
+  
+  // Add loading state
+  if (btn) {
+    btn.classList.add("btn-loading");
+    btnText.textContent = "جاري الحساب...";
+    btn.disabled = true;
+  }
+
+  // Call the original map function
+  window.showAccidentOnMap(index).then(() => {
+    // Reset button after map logic finishes (Success or Error)
+    if (btn) {
+      btn.classList.remove("btn-loading");
+      btnText.textContent = "تتبع المسار";
+      btn.disabled = false;
+    }
+  }).catch(() => {
+     // Reset on error too
+     if (btn) {
+      btn.classList.remove("btn-loading");
+      btnText.textContent = "تتبع المسار";
+      btn.disabled = false;
+    }
+  });
+};
 window.renderAccidents = renderAccidents;
 
 // ===== CHARTS LOGIC =====
@@ -257,20 +356,29 @@ function initCharts() {
 
 function updateSeverityChart() {
   if (!severityChartInstance) return;
-  let low = 0; // 1-2 injuries
-  let medium = 0; // 3-5 injuries
-  let high = 0; // >5 injuries
+
+  let low = 0,
+    medium = 0,
+    high = 0;
 
   accidents.forEach((acc) => {
-    const count = acc.numberOfAccidents || 0;
-    if (count <= 2) low++;
-    else if (count <= 5) medium++;
-    else high++;
+    switch ((acc.status  )) {
+      case "Normal":
+        low++;
+        break;
+      case "Moderate":
+        medium++;
+        break;
+      case "Critical":
+        high++;
+        break;
+    }
   });
 
   severityChartInstance.data.datasets[0].data = [low, medium, high];
   severityChartInstance.update();
 }
+
 
 // Call initialization on load
 document.addEventListener("DOMContentLoaded", () => {
@@ -367,7 +475,7 @@ require([
       return results.features.map((f) => {
         f.symbol = symbol;
         f.popupTemplate = {
-          title: "{name_ar}",
+          title: "{name}",
           content:
             type === "hospital"
               ? "🏥 مستشفى | الأسرة المتاحة: {Bed}"
@@ -426,11 +534,7 @@ require([
 
   // --- 7. ROUTING LOGIC ---
   window.showAccidentOnMap = async function (index) {
-    const btn = document.getElementById(`viewBtn${index}`);
-    if (btn) {
-      btn.disabled = true;
-      btn.textContent = "جاري الحساب...";
-    }
+ 
 
     // Check data
     if (allHospitalFeatures.length === 0 || allAmbulanceFeatures.length === 0) {

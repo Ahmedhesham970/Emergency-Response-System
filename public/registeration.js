@@ -115,6 +115,8 @@
         let data;
         try {
           data = await res.json();
+           const token = data.token;
+           localStorage.setItem("token", token);
           console.log("📥 Response data:", data);
         } catch (parseErr) {
           console.error("❌ Failed to parse response:", parseErr);
@@ -127,26 +129,28 @@
           successMessage.textContent = data.message || "تم التسجيل بنجاح! 🎉";
           successMessage.style.display = "block";
 
-          if (typeof Swal !== "undefined") {
-            await Swal.fire({
-              title: "تم التسجيل بنجاح! 🎉",
-              text: data.message || "تم إنشاء حسابك بنجاح , الان اتجه للصفحة الرئيسية",
-              icon: "success",
-              confirmButtonText: "حسناً",
-              confirmButtonColor: "#4CAF50",
-              timer: 3000,
-              timerProgressBar: true,
-            });
+     if (typeof Swal !== "undefined") {
+       await Swal.fire({
+         title: "تم التسجيل بنجاح! 🎉",
+         text:
+           data.message || "تم إنشاء حسابك بنجاح , الان اتجه للصفحة الرئيسية",
+         icon: "success",
+         confirmButtonText: "حسناً",
+         confirmButtonColor: "#4CAF50",
+         timer: 3000,
+         timerProgressBar: true,
+       });
 
-            // Redirect after SweetAlert closes
-           
-          } else {
-            alert("✅ " + (data.message || "تم التسجيل بنجاح!"));
-            setTimeout(() => {
-              window.location.href =
-                "file:///C:/Users/ahmed/OneDrive%20-%20Faculty%20Of%20Computer%20and%20information%20(Suez%20Canal%20University%20-%20Ismailia%20Branch)/Desktop/final-project/public/user.html";
-            }, 2000);
-          }
+       // ✅ ADD REDIRECT HERE
+       window.location.href =
+         "file:///C:/Users/ahmed/OneDrive%20-%20Faculty%20Of%20Computer%20and%20information%20(Suez%20Canal%20University%20-%20Ismailia%20Branch)/Desktop/final-project/public/user.html";
+     } else {
+       alert("✅ " + (data.message || "تم التسجيل بنجاح!"));
+       setTimeout(() => {
+         window.location.href =
+           "file:///C:/Users/ahmed/OneDrive%20-%20Faculty%20Of%20Computer%20and%20information%20(Suez%20Canal%20University%20-%20Ismailia%20Branch)/Desktop/final-project/public/user.html";
+       }, 2000);
+     }
 
           form.reset();
         } else {

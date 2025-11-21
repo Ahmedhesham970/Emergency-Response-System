@@ -63,7 +63,9 @@ function initMap() {
             addMarker(coords, [220, 53, 69]);
             Swal.fire({
               title: "✅ تم تحديد موقعك",
-              text: `${pos.coords.longitude} , ${pos.coords.latitude}`,
+              text: `${pos.coords.longitude.toFixed(4)} , ${
+                pos.coords.latitude.toFixed(4)
+              }`,
               position: "top-left",
               icon: "success",
             });
@@ -85,6 +87,7 @@ function initMap() {
 
         const injuries = parseInt(document.getElementById("injuries").value);
         const desc = document.getElementById("desc").value;
+        const severity = document.getElementById("severity").value;
 
         if (!injuries) return Swal.fire("⚠️", "أدخل عدد المصابين", "warning");
 
@@ -92,7 +95,8 @@ function initMap() {
           geom: { type: "Point", coordinates: currentLocation },
           numberOfAccidents: injuries,
           description: desc,
-          userId: 1,
+          severity: severity,
+          // userId: 1,
         };
 
         const token = localStorage.getItem("token");

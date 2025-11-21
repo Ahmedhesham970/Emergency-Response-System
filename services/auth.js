@@ -168,7 +168,18 @@ exports.register = async (req, res) => {
     });
     if (imgUrl) console.log("uploaded", imgUrl);
     console.log("✅ User created successfully:", newUser.id);
-
+    const token = await signToken({
+      id: newUser.id,
+      email: newUser.email,
+      fullName: newUser.fullName,
+      // imageUrl: newUser.imageUrl,
+    });
+    log("TOKEN:", token);
+    if (!token) {
+      return res.status(500).json({
+        message: "فشل في إنشاء رمز التحقق. حاول مرة أخرى لاحقاً",
+      });
+    }
     // ✅ إرجاع Response ناجح
     return res.status(201).json({
       success: true,
@@ -179,6 +190,8 @@ exports.register = async (req, res) => {
         email: newUser.email,
         phone: newUser.phone,
       },
+      token
+
     });
   } catch (err) {
     console.error("❌ REGISTER ERROR:", err);
@@ -230,7 +243,7 @@ exports.logIn = async (req, res) => {
       id: userData.id,
       email: userData.email,
       fullName: userData.fullName,
-      imageUrl: userData.imageUrl,
+      // imageUrl: userData.imageUrl,
     });
     // res.cookie("token", token, {
     //   httpOnly: true,

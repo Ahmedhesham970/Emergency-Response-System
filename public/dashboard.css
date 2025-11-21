@@ -1,281 +1,526 @@
+@import url("https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap");
+
+/* 1. Variables & Reset */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-body {
-  font-family: "Cairo", sans-serif;
-  background: #f0f2f5;
-  /* On Desktop: Hide scrollbars for a "App" feel */
-  overflow: hidden; 
-  height: 100vh;
+:root {
+  --bg: #0e0f17;
+  --sidebar-bg: #171822;
+  --card: #232536;
+  --card-2: #2a2d41;
+  --primary: #00eaff;
+  --accent: #ff3860;
+  --success: #4caf50;
+  --warning: #ff9800;
+  --muted: rgba(255, 255, 255, 0.75);
+  --text: #ffffff;
+  --r-sm: 8px;
+  --r-md: 14px;
+  --r-lg: 22px;
 }
 
-/* Main Layout Structure */
+/* 2. Global Styles */
+body {
+  font-family: "Cairo", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--card-2);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary);
+}
+
+/* 3. Layout Structure */
 .main-layout {
   display: flex;
   flex-direction: column;
   height: 100vh;
+  width: 100%;
+  padding: 15px;
+  gap: 15px;
 }
 
-/* =========================================
-   🟢 TOP SECTION: Sidebar + Map 
-   (Reduced Height to minimize Map)
-   ========================================= */
 .top-section {
   display: flex;
-  height: 55vh; /* ✅ Reduced from 70vh */
-  overflow: hidden;
-  border-bottom: 1px solid #ddd;
+  flex: 1;
+  gap: 15px;
+  min-height: 0;
 }
 
-/* Sidebar */
+/* 4. Sidebar Styling */
 .sidebar {
-  width: 400px; /* Fixed width on desktop */
-  min-width: 350px;
-  background: white;
+  width: 350px;
+  background: var(--sidebar-bg);
+  border-radius: var(--r-lg);
   display: flex;
   flex-direction: column;
-  z-index: 10;
-  box-shadow: 4px 0 20px rgba(0, 0, 0, 0.05);
-  position: relative;
-  height: 100%;
+  padding: 20px;
+  gap: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
 
 /* Stats Panel */
 .stats-panel {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  padding: 15px;
+  background: var(--card);
+  border-radius: var(--r-md);
+  padding: 20px;
   text-align: center;
-  color: white;
-  flex-shrink: 0;
+  border: 1px solid rgba(0, 234, 255, 0.1);
 }
 
-.stat-value { font-size: 24px; font-weight: 800; }
-.stat-label { font-size: 12px; opacity: 0.9; }
+.stat-value {
+  font-size: 3rem;
+  font-weight: 800;
+  color: var(--primary);
+  line-height: 1;
+  text-shadow: 0 0 20px rgba(0, 234, 255, 0.4);
+  transition: color 0.3s ease;
+}
 
-/* Search */
+.stat-value.updating {
+  color: var(--accent);
+  transform: scale(1.1);
+}
+
+.stat-label {
+  color: var(--muted);
+  font-size: 1rem;
+  margin-top: 5px;
+}
+
+/* Search Container */
 .search-container {
-  padding: 15px;
-  border-bottom: 1px solid #eee;
-  background: #fff;
-  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
+/* Input Field */
 .search-box {
   width: 100%;
-  padding: 10px 15px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  font-family: "Cairo";
+  padding: 14px 16px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--r-md);
+  font-size: 1rem;
+  font-family: "Cairo", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  transition: all 0.3s ease;
 }
 
+.search-box:focus {
+  border-color: var(--primary);
+  outline: none;
+  background: var(--card-2);
+  box-shadow: 0 0 0 4px rgba(0, 234, 255, 0.1);
+}
+
+/* Filter Buttons */
 .filter-buttons {
   display: flex;
   gap: 8px;
-  margin-top: 10px;
-  justify-content: center;
 }
 
 .filter-btn {
-  padding: 6px 12px;
-  border: 1px solid #667eea;
-  background: white;
-  color: #667eea;
-  border-radius: 20px;
+  flex: 1;
+  padding: 8px 10px;
+  border: none;
+  border-radius: var(--r-sm);
+  background: var(--card-2);
+  color: var(--muted);
   cursor: pointer;
-  font-size: 12px;
-  transition: 0.3s;
-  font-family: "Cairo";
+  font-family: "Cairo", sans-serif;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
 }
 
-.filter-btn.active, .filter-btn:hover {
-  background: #667eea;
-  color: white;
+.filter-btn:hover {
+  background: var(--card);
+  color: var(--text);
+}
+
+.filter-btn.active {
+  background: linear-gradient(135deg, var(--primary) 0%, #008fa0 100%);
+  color: #000;
+  font-weight: 800;
+  box-shadow: 0 4px 15px rgba(0, 234, 255, 0.3);
 }
 
 /* Accidents List */
 .accidents-container {
-  flex: 1;
-  overflow-y: auto;
-  padding: 15px;
-  background: #f9f9f9;
+  flex: 1; /* This tells the container to fill the available height in its parent (.sidebar) */
+  
+  /* ✅ FIX: Uncomment this line to enable vertical scrolling */
+  overflow-y: auto; 
+  
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-right: 5px; /* Adds space for the scrollbar on the right (RTL layout) */
 }
 
-.accident-card {
-  background: white;
-  border-radius: 10px;
-  padding: 15px;
-  margin-bottom: 12px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-  border-right: 4px solid #667eea;
+.loading {
+  text-align: center;
+  color: var(--muted);
+  margin-top: 20px;
+  font-size: 0.9rem;
+}
+
+/* Enhanced Accident Card */
+.accident-item {
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: var(--card);
+  border-radius: var(--r-md);
+  padding: 15px 20px;
+  border-left: 5px solid var(--primary);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+  animation: slideIn 0.4s ease forwards;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s ease;
+
+}
+
+/* .accident-item:hover {
+  transform: translateX(-5px);
+  background: var(--card-2);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+} */
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Severity Indicators */
+.accident-item.severity-low {
+  border-right-color: var(--success);
+}
+.accident-item.severity-medium {
+  border-right-color: var(--warning);
+}
+.accident-item.severity-high {
+  border-right-color: var(--accent);
 }
 
 .accident-header {
   display: flex;
   justify-content: space-between;
-  font-size: 12px;
-  color: #888;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
+  font-size: 0.85rem;
+  color: var(--muted);
 }
 
-.accident-id { color: #667eea; font-weight: bold; }
+.accident-id {
+  font-family: monospace;
+  color: var(--primary);
+  background: rgba(0, 234, 255, 0.1);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
 
-.info-row {
+.accident-body {
   display: flex;
   justify-content: space-between;
-  margin: 5px 0;
-  font-size: 13px;
+  align-items: center;
+  margin-bottom: 15px;
 }
 
-.accident-actions {
+.severity-badge {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.badge-low {
+  background: #4caf50; /* أخضر */
+  color: #ffffff;
+  font-weight: 700;
+  text-shadow: 0 0 2px rgba(0,0,0,0.3);
+}
+
+.badge-medium {
+  background: #ff9800; /* برتقالي */
+  color: #ffffff; /* خلي النص أبيض للوضوح */
+  font-weight: 700;
+  text-shadow: 0 0 2px rgba(0,0,0,0.3);
+}
+
+.badge-high {
+  background: #f44336; /* أحمر */
+  color: #ffffff;
+  font-weight: 700;
+  text-shadow: 0 0 3px rgba(0,0,0,0.5);
+  box-shadow: 0 0 8px rgba(244, 67, 54, 0.7);
+}
+
+.location-text {
+  font-size: 0.9rem;
+  color: var(--text);
   display: flex;
-  gap: 8px;
-  margin-top: 10px;
+  align-items: center;
+  gap: 5px;
 }
 
-.view-btn, .delete-btn {
+/* Action Buttons */
+#accidentsList .accident-actions {
+  display: flex !important;
+  gap: 10px !important;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  width: 100%;
+}
+
+#accidentsList .action-btn {
   flex: 1;
-  padding: 8px;
-  border: none;
-  border-radius: 6px;
-  color: white;
+  padding: 10px 15px !important;
+  border-radius: var(--r-sm) !important;
   cursor: pointer;
-  font-family: "Cairo";
-  font-size: 12px;
-}
-
-.view-btn { background: #667eea; }
-.delete-btn { background: #ff4444; }
-
-/* Map Container */
-.map-container {
-  flex: 1; /* Takes remaining width next to sidebar */
+  font-family: "Cairo", sans-serif !important;
+  font-size: 0.9rem !important;
+  font-weight: 600 !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   position: relative;
-  background: #e0e0e0;
+  overflow: hidden;
+  text-decoration: none !important;
+  line-height: 1.5;
+  appearance: none;
+  -webkit-appearance: none;
 }
 
-#map { width: 100%; height: 100%; }
+#accidentsList .btn-view {
+  background: rgba(0, 234, 255, 0.1) !important;
+  color: var(--primary) !important;
+  border: 1px solid rgba(0, 234, 255, 0.3) !important;
+  box-shadow: 0 0 5px rgba(0, 234, 255, 0.05);
+}
 
-/* Floating Map Elements */
-.route-info, .route-legend {
-  position: absolute;
-  left: 15px;
-  background: rgba(255,255,255,0.95);
-  padding: 12px;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+#accidentsList .btn-view:hover {
+  background: rgba(0, 234, 255, 0.2) !important;
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 15px rgba(0, 234, 255, 0.25) !important;
+  transform: translateY(-2px);
+  text-shadow: 0 0 8px rgba(0, 234, 255, 0.6);
+}
+
+#accidentsList .btn-view:active {
+  transform: translateY(0);
+}
+
+#accidentsList .btn-delete {
+  background: transparent !important;
+  color: var(--muted) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+#accidentsList .btn-delete:hover {
+  background: rgba(255, 56, 96, 0.1) !important;
+  color: var(--accent) !important;
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 10px rgba(255, 56, 96, 0.2) !important;
+}
+
+#accidentsList .action-btn:disabled,
+#accidentsList .action-btn.btn-loading {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+  filter: grayscale(100%);
+}
+
+.btn-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-radius: 50%;
+  border-top-color: var(--primary);
+  animation: spin 1s linear infinite;
   display: none;
-  z-index: 5;
-  font-size: 13px;
 }
-.route-info { top: 15px; max-width: 300px; }
-.route-legend { bottom: 20px; }
-.route-info.active, .route-legend.active { display: block; }
-.legend-item { display: flex; align-items: center; margin-top: 5px; }
-.legend-color { width: 30px; height: 4px; margin-left: 8px; border-radius: 2px; }
 
-/* =========================================
-   🔵 BOTTOM SECTION: Footer Bar 
-   (Increased Height for Bigger Charts)
-   ========================================= */
-.footer-bar {
-  height: 45vh; /* ✅ Increased from 30vh */
-  background: white;
+.btn-loading .btn-spinner { display: block; }
+.btn-loading .btn-icon { display: none; }
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* 5. Map Section */
+.map-container {
+  flex: 1;
+  position: relative;
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+  background: var(--card);
+}
+
+#map {
+  width: 100%;
+  height: 100%;
+}
+
+.route-info,
+.route-legend {
+  position: absolute;
+  background: rgba(35, 37, 54, 0.95);
+  backdrop-filter: blur(10px);
+  padding: 15px;
+  border-radius: var(--r-md);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  z-index: 10;
+  color: var(--text);
+}
+
+.route-info {
+  top: 20px;
+  left: 20px;
+  max-width: 250px;
+}
+
+.route-legend {
+  bottom: 20px;
+  left: 20px;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 -4px 20px rgba(0,0,0,0.05);
-  z-index: 20;
+  gap: 8px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.legend-color {
+  width: 25px;
+  height: 6px;
+  border-radius: 10px;
+}
+
+/* 6. Footer / Charts Section */
+.footer-bar {
+  height: 200px;
+  background: var(--sidebar-bg);
+  border-radius: var(--r-lg);
+  padding: 15px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .footer-title {
-  padding: 8px 15px;
-  font-size: 14px;
-  font-weight: bold;
-  color: #555;
-  background: #f8f9fa;
-  border-bottom: 1px solid #eee;
-  flex-shrink: 0;
+  color: var(--primary);
+  font-weight: 700;
+  font-size: 1.1rem;
+  display:block;
+  align-items: center;
+  gap: 10px;
 }
 
 .charts-wrapper {
+  flex: 1;
   display: flex;
-  flex: 1; /* Fills the 45vh height */
-  padding: 15px;
   gap: 20px;
-  align-items: center;
-  justify-content: space-between;
   height: 100%;
 }
 
 .chart-card {
   flex: 1;
-  height: 100%; /* Force it to take full height of footer */
-  background: #fff;
-  border: 1px solid #eee;
-  border-radius: 12px;
-  padding: 15px;
+  background: var(--card);
+  border-radius: var(--r-md);
+  padding: 10px;
   position: relative;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.03);
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-/* =========================================
-   📱 RESPONSIVE DESIGN (Mobile & Tablet)
-   ========================================= */
-@media (max-width: 1024px) {
-  
-  /* 1. Allow Page Scroll */
-  body {
-    overflow-y: auto;
-    overflow-x: hidden;
-    height: auto;
-  }
+canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
 
+/* ESRI Map Dark Theme */
+.esri-view {
+  background-color: var(--bg) !important;
+}
+
+.esri-widget {
+  background-color: var(--card) !important;
+  color: var(--text) !important;
+}
+
+/* Responsive Design */
+@media (max-width: 900px) {
   .main-layout {
     height: auto;
-    display: block;
+    overflow-y: auto;
   }
 
-  /* 2. Stack Top Section Vertical */
   .top-section {
-    flex-direction: column-reverse; /* Map on top of sidebar, or remove reverse for Sidebar first */
+    flex-direction: column;
+    flex: none;
     height: auto;
-    display: block;
   }
 
-  /* 3. Sidebar takes full width, fixed height */
   .sidebar {
     width: 100%;
-    height: 500px; /* Fixed height for scrolling list */
-    box-shadow: none;
-    border-right: none;
-    border-bottom: 4px solid #eee;
+    height: auto;
   }
 
-  /* 4. Map takes specific height */
   .map-container {
-    width: 100%;
-    height: 400px; /* Good height for mobile map */
+    height: 400px;
   }
 
-  /* 5. Footer allows charts to stack */
   .footer-bar {
-    height: auto; /* Grow with content */
-    margin-top: 20px;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    
   }
 
   .charts-wrapper {
     flex-direction: column;
-    height: auto;
-    gap: 15px;
-  }
-
-  .chart-card {
-    width: 100%;
-    height: 300px; /* Fixed height per chart on mobile */
+    height: 400px;
   }
 }

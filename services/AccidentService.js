@@ -8,7 +8,7 @@ const Report = require("../models/reportModel");
  */
 const createReport = async (req, res) => {
   try {
-    const { geom, numberOfAccidents, description, pictureURL, userId } =
+    const { geom, numberOfAccidents, description, pictureURL, severity } =
       req.body;
 
     if (!geom || !geom.coordinates || !numberOfAccidents) {
@@ -27,6 +27,7 @@ const createReport = async (req, res) => {
       numberOfAccidents,
       description: description || "",
       pictureURL: pictureURL || null,
+      status: severity ,
       userId :  req.user.id,
       reportTime: currentDate, // ← التاريخ مباشرة
     });

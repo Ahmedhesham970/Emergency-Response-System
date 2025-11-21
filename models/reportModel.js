@@ -32,7 +32,12 @@ const Reports = sequelize.define(
       allowNull: true,
       comment: "وصف تفصيلي للحادث (اختياري).",
     },
-
+    status: {
+      type: DataTypes.ENUM("Normal", "Moderate", "Critical"),
+      allowNull: true,
+      comment: "حالة البلاغ من حيث الخطورة.",
+      // defaultValue : "Normal",
+    },
     // ✔ تم إصلاح المشكلة هنا
     pictureURL: {
       type: DataTypes.STRING,

@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <title>🚑 لوحة متابعة البلاغات</title>
+    <link rel="stylesheet" href="./dashboard.css" />
 
     <link rel="stylesheet" href="https://js.arcgis.com/4.30/esri/themes/light/main.css" />
 
@@ -12,7 +13,6 @@
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <link rel="stylesheet" href="./dashboard.css" />
   </head>
 
   <body>
@@ -28,19 +28,7 @@
             </div>
           </div>
 
-          <div class="search-container">
-            <input
-              type="text"
-              class="search-box"
-              placeholder="🔍 ابحث برقم البلاغ..."
-              id="searchBox"
-            />
-            <div class="filter-buttons">
-              <button class="filter-btn active" data-filter="all">الكل</button>
-              <button class="filter-btn" data-filter="high">حالات حرجة</button>
-              <button class="filter-btn" data-filter="recent">الأحدث</button>
-            </div>
-          </div>
+      
 
           <div class="accidents-container" id="accidentsList">
             <div class="loading">جاري تحميل البلاغات...</div>
@@ -50,7 +38,6 @@
         <div class="map-container">
           <div id="map"></div>
           
-          <div class="route-info" id="routeInfo"></div>
 
           <div class="route-legend" id="routeLegend">
             <div class="legend-item">
