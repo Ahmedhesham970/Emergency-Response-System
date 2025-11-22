@@ -8,16 +8,27 @@
       href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap"
       rel="stylesheet"
     />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="./register.css" />
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   </head>
 
   <body>
-    <nav style="padding: 15px; background: #222; color: white; display: flex; gap: 20px;">
-      <a href="#" style="color: gray; pointer-events:none;">Home (Disabled)</a>
-      <a href="#" style="color: gray; pointer-events:none;">Profile (Disabled)</a>
-      <a href="register.html" style="color: white;">إنشاء حساب</a>
-    </nav>
+   <nav>
+    <div class="nav-logo">
+        <i class="fa-solid fa-heart-pulse"></i> LifeLink
+    </div>
+    <div class="nav-links">
+        <a href="home.html"  class="nav-btn">الرئيسية</a>
+        <a href="register.html" class="nav-btn">إنشاء حساب</a>
+        <a href="login.html" class="nav-btn">تسجيل الدخول</a>
+        <!-- <a href="contact.html"></a> -->
+    </div>
+    
+    <div class="menu-toggle" style="display: none;">
+        <i class="fa-solid fa-bars"></i>
+    </div>
+</nav>
 
     <div class="register-container">
       <div class="register-card">

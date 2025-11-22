@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LifeLink - نظام إدارة الطوارئ الذكي</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="home.css">
+
+</head>
+<<body>
+
+    <nav class="navbar">
+        <div class="nav-logo">
+            <i class="fa-solid fa-heart-pulse"></i> LifeLink
+        </div>
+        <div class="nav-links">
+            <a href="#problem">المشكلة</a>
+            <a href="#solution">الحل</a>
+            <a href="#features">المميزات</a>
+            <a href="#tech">التقنيات</a>
+            
+        </div>
+        <div class="nav-links" id="pages">
+            <a href="./login.html" class="nav-btn">تسجيل الدخول</a>
+            <a href="./register.html" class="nav-btn">إنشاء حساب</a>
+            <a href="./user.html" class="nav-btn">الصفحة الرئيسية</a>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <h1>LifeLink</h1>
+        <p class="slogan">"A second can do nothing, but saves a life"</p>
+        <p class="slogan" style="font-size: 1.1rem; margin-top: -20px;">الثانية قد لا تعني شيئاً، لكنها تنقذ حياة</p>
+        <br>
+        <a href="#problem" class="btn-lg btn-primary">اكتشف المشروع</a>
+    </header>
+
+    <section id="problem">
+        <div class="section-title">
+            <h2>واقع حوادث الطرق في مصر</h2>
+            <p>إحصائيات وتحديات تواجه منظومة الإسعاف الحالية</p>
+        </div>
+
+        <div class="stats-container">
+            <div class="stat-item">
+                <span class="stat-number">7,000+</span>
+                <span class="stat-label">وفاة سنوياً بسبب الحوادث</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">>15 دقيقة</span>
+                <span class="stat-label">متوسط زمن وصول الإسعاف</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">24/7</span>
+                <span class="stat-label">حوادث مستمرة بلا توقف</span>
+            </div>
+        </div>
+
+        <div class="grid-container">
+            <div class="info-card reveal">
+                <div class="card-icon"><i class="fa-solid fa-phone-slash"></i></div>
+                <h3 class="card-title">مشاكل الاتصال</h3>
+                <p class="card-text">صعوبة الوصول لرقم 123، انقطاع المكالمات، وبطء جمع البيانات من المبلغين شفوياً.</p>
+            </div>
+            <div class="info-card reveal">
+                <div class="card-icon"><i class="fa-solid fa-map-location-dot"></i></div>
+                <h3 class="card-title">تحديد الموقع</h3>
+                <p class="card-text">صعوبة وصف المكان بدقة خاصة على الطرق السريعة، وغياب الإحداثيات الدقيقة.</p>
+            </div>
+            <div class="info-card reveal">
+                <div class="card-icon"><i class="fa-solid fa-truck-medical"></i></div>
+                <h3 class="card-title">مشاكل تشغيلية</h3>
+                <p class="card-text">الإسعاف الأقرب ليست دائماً الأسرع بسبب الزحام، وتأخر الوصول لأكثر من 15 دقيقة.</p>
+            </div>
+            <div class="info-card reveal">
+                <div class="card-icon"><i class="fa-solid fa-network-wired"></i></div>
+                <h3 class="card-title">مشاكل هيكلية</h3>
+                <p class="card-text">سوء توزيع نقاط الإسعاف، وضعف الاستثمار في الأنظمة الذكية لترتيب الأولويات.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="solution" style="background: var(--sidebar-bg);">
+        <div class="section-title">
+            <h2>مشروع LifeLink: الحل المقترح</h2>
+            <p>نظام إدارة طوارئ حديث وقابل للتوسع</p>
+        </div>
+
+        <div class="grid-container">
+            <div class="info-card reveal" style="border-color: var(--success);">
+                <div class="card-icon" style="color: var(--success);"><i class="fa-solid fa-location-crosshairs"></i></div>
+                <h3 class="card-title">تحديد دقيق للموقع (LBS)</h3>
+                <p class="card-text">إرسال إحداثيات GPS تلقائياً عبر التطبيق بدلاً من الوصف الشفوي، مما يحل مشكلة التوهان.</p>
+            </div>
+            <div class="info-card reveal" style="border-color: var(--success);">
+                <div class="card-icon" style="color: var(--success);"><i class="fa-solid fa-route"></i></div>
+                <h3 class="card-title">خوارزمية التوجيه الذكي</h3>
+                <p class="card-text">لا يتم إرسال "أقرب" سيارة فقط، بل "أسرع" سيارة بناءً على حركة المرور والـ ETA.</p>
+            </div>
+            <div class="info-card reveal" style="border-color: var(--success);">
+                <div class="card-icon" style="color: var(--success);"><i class="fa-solid fa-chart-pie"></i></div>
+                <h3 class="card-title">تحليل البيانات (GIS)</h3>
+                <p class="card-text">خرائط حرارية (Heatmaps) لأماكن الحوادث لمساعدة الدولة في إعادة توزيع نقاط التمركز.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="features">
+        <div class="section-title">
+            <h2>كيف يحل LifeLink مشاكل الإسعاف في مصر؟</h2>
+        </div>
+        
+        <div class="comparison-list" style="max-width: 800px; margin: 0 auto;">
+            <div class="comparison-item reveal">
+                <div style="flex: 1;">
+                    <h4 style="color: var(--accent); margin-bottom: 5px;">المشكلة</h4>
+                    <p class="card-text">فشل الوصول لرقم 123 وبطء الاستجابة</p>
+                </div>
+                <i class="fa-solid fa-arrow-left arrow-icon"></i>
+                <div style="flex: 1;">
+                    <h4 style="color: var(--success); margin-bottom: 5px;">حل LifeLink</h4>
+                    <p class="card-text">طلب استغاثة فوري عبر التطبيق (Online Request)</p>
+                </div>
+            </div>
+
+            <div class="comparison-item reveal">
+                <div style="flex: 1;">
+                    <h4 style="color: var(--accent); margin-bottom: 5px;">المشكلة</h4>
+                    <p class="card-text">صعوبة وصف العنوان بدقة</p>
+                </div>
+                <i class="fa-solid fa-arrow-left arrow-icon"></i>
+                <div style="flex: 1;">
+                    <h4 style="color: var(--success); margin-bottom: 5px;">حل LifeLink</h4>
+                    <p class="card-text">استخدام الـ GPS وإرسال الصور من الموقع</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="tech" style="background: var(--card-2);">
+        <div class="section-title">
+            <h2>البنية التقنية للمشروع</h2>
+            <p>تقنيات حديثة لضمان السرعة والموثوقية</p>
+        </div>
+
+        <div class="grid-container" style="margin-bottom: 40px;">
+            <div class="info-card reveal">
+                <h3 class="card-title">System Architecture</h3>
+                <ul style="list-style: none; color: var(--muted); line-height: 2;">
+                    <li><i class="fa-solid fa-mobile-screen" style="color: var(--primary); margin-left: 10px;"></i> User App / Web Interface</li>
+                    <li><i class="fa-solid fa-server" style="color: var(--primary); margin-left: 10px;"></i> Node.js API & Express</li>
+                    <li><i class="fa-solid fa-database" style="color: var(--primary); margin-left: 10px;"></i> PostgreSQL & PostGIS</li>
+                    <li><i class="fa-solid fa-map" style="color: var(--primary); margin-left: 10px;"></i> ArcGIS Maps & GIS Engine</li>
+                </ul>
+            </div>
+            <div class="info-card reveal">
+                <h3 class="card-title">المميزات التقنية</h3>
+                <ul style="list-style: none; color: var(--muted); line-height: 2;">
+                    <li><i class="fa-solid fa-bolt" style="color: var(--warning); margin-left: 10px;"></i> WebSockets (Real-time Tracking)</li>
+                    <li><i class="fa-solid fa-lock" style="color: var(--warning); margin-left: 10px;"></i> JWT Authentication</li>
+                    <li><i class="fa-solid fa-image" style="color: var(--warning); margin-left: 10px;"></i> Cloudinary (Image Upload)</li>
+                    <li><i class="fa-solid fa-brain" style="color: var(--warning); margin-left: 10px;"></i> Smart Dispatch Algorithms</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="tech-stack">
+            <span class="tech-badge">Node.js</span>
+            <span class="tech-badge">Express</span>
+            <span class="tech-badge">PostgreSQL</span>
+            <span class="tech-badge">PostGIS</span>
+            <span class="tech-badge">ArcGIS API</span>
+            <span class="tech-badge">Socket.io</span>
+            <span class="tech-badge">Leaflet</span>
+        </div>
+    </section>
+
+    <section style="text-align: center;">
+        <div class="section-title">
+            <h2>النتائج والأثر المتوقع</h2>
+        </div>
+        <div class="grid-container">
+            <div class="info-card reveal" style="text-align: center;">
+                <i class="fa-solid fa-stopwatch card-icon" style="color: var(--accent);"></i>
+                <h3 class="card-title">تقليل زمن الوصول</h3>
+                <p class="card-text">زيادة فرص النجاة في الساعة الذهبية (Golden Hour).</p>
+            </div>
+            <div class="info-card reveal" style="text-align: center;">
+                <i class="fa-solid fa-chart-line card-icon" style="color: var(--primary);"></i>
+                <h3 class="card-title">تخطيط قومي أفضل</h3>
+                <p class="card-text">دعم اتخاذ القرار الحكومي بناءً على بيانات حقيقية.</p>
+            </div>
+            <div class="info-card reveal" style="text-align: center;">
+                <i class="fa-solid fa-check-double card-icon" style="color: var(--success);"></i>
+                <h3 class="card-title">كفاءة التشغيل</h3>
+                <p class="card-text">تقليل الهدر في تحركات سيارات الإسعاف وتحسين التوزيع.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 LifeLink Project. All Rights Reserved.</p>
+        <p style="margin-top: 10px; opacity: 0.5;">Designed for Saving Lives.</p>
+    </footer>
+
+    <script>
+        // Scroll Animation
+        const revealElements = document.querySelectorAll('.reveal');
+        
+        function checkScroll() {
+            revealElements.forEach(el => {
+                const elementTop = el.getBoundingClientRect().top;
+                const windowHeight = window.innerHeight;
+                
+                if (elementTop < windowHeight - 100) {
+                    el.classList.add('active');
+                }
+            });
+        }
+        
+        window.addEventListener('scroll', checkScroll);
+        checkScroll(); // Initial check
+        
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>

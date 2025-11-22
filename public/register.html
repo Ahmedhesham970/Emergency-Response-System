@@ -14,12 +14,21 @@
   </head>
 
   <body>
-    <nav style="padding: 15px; background: #222; color: white; display: flex; gap: 20px;">
-      <a href="#" style="color: gray; pointer-events:none;">Home (Disabled)</a>
-      <a href="#" style="color: gray; pointer-events:none;">Profile (Disabled)</a>
-      <a href="#" style="color: white;" id="mainLink">Main Page</a>
-    </nav>
-
+      <nav>
+    <div class="nav-logo">
+        <i class="fa-solid fa-heart-pulse"></i> LifeLink
+    </div>
+    <div class="nav-links">
+        <a href="home.html"  class="nav-btn">الرئيسية</a>
+        <a href="register.html" class="nav-btn">إنشاء حساب</a>
+        <a href="login.html" class="nav-btn">تسجيل الدخول</a>
+        <!-- <a href="contact.html"></a> -->
+    </div>
+    
+    <div class="menu-toggle" style="display: none;">
+        <i class="fa-solid fa-bars"></i>
+    </div>
+</nav>
     <script>
       document.getElementById("mainLink").addEventListener("click", () => {
         window.location.href = "file:///C:/Users/ahmed/OneDrive%20-%20Faculty%20Of%20Computer%20and%20information%20(Suez%20Canal%20University%20-%20Ismailia%20Branch)/Desktop/final-project/public/user.html";
